@@ -12,10 +12,12 @@ namespace ProjMongoDB20220714.Controllers
     {
 
         private readonly ClientService _clientService;
+        private readonly AddressService _addressService;
 
-        public ClientController(ClientService clientService)
+        public ClientController(ClientService clientService, AddressService addressService)
         {
             _clientService = clientService;
+            _addressService = addressService;
         }
 
         [HttpGet]
@@ -39,6 +41,10 @@ namespace ProjMongoDB20220714.Controllers
         [HttpPost]
         public ActionResult<Client> Create(Client client)
         {
+
+            Address address = _addressService.Create(client.Address);
+            client.Address = address;
+
             _clientService.Create(client);
 
             return CreatedAtRoute("GetClient", new { id = client.Id.ToString() }, client);
